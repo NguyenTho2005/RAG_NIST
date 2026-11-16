@@ -1,0 +1,47 @@
+# secrets & local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# node
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# data & artifacts
+data/
+*.db
+*.sqlite3
+/tmp/
+evals/reports/*.json
+evals/reports/*.md
+!evals/reports/.gitkeep
+evals/baselines/*.json
+!evals/baselines/README.md
+models/
+.cache/
+
+# tooling
+.playwright/
+playwright-report/
+test-results/
+.DS_Store
+.idea/
+.vscode/

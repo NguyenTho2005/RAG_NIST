@@ -1,0 +1,62 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Start infrastructure
+        run: docker compose up -d postgres redis qdrant
+      - name: Wait for services
+        run: |
+          for i in $(seq 1 30); do
+            docker compose exec -T postgres pg_isready -U rag -d rag && break
+            sleep 2
+          done
+      - name: Install Python dependencies
+        run: uv sync --extra dev --frozen
+      - name: Lint
+        run: uv run ruff check apps tests evals scripts && uv run ruff format --check apps tests evals scripts
+      - name: Type check
+        run: uv run mypy apps/api/app apps/worker/worker
+      - name: Migrate
+        env:
+          DATABASE_URL: postgresql+asyncpg://rag:rag_dev_password@localhost:5432/rag
+        run: uv run alembic upgrade head
+      - name: Verify migration drift
+        env:
+          DATABASE_URL: postgresql+asyncpg://rag:rag_dev_password@localhost:5432/rag
+        run: uv run alembic check
+      - name: Tests
+        env:
+          DATABASE_URL: postgresql+asyncpg://rag:rag_dev_password@localhost:5432/rag
+        run: uv run pytest -q
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:8000

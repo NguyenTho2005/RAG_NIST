@@ -1,0 +1,23 @@
+{
+  "title": "Bộ câu hỏi GRC tiếng Việt v1",
+  "description": "Bộ đánh giá truy hồi trên tám tài liệu chính sách nội bộ giả định: nhân sự, mua sắm, bảo mật, dữ liệu, an toàn, tài chính, rủi ro và công nghệ.",
+  "version": "1.0.0",
+  "language": "vi",
+  "languages": ["vi"],
+  "authoring": "AI-authored draft generated for this repository",
+  "review_status": "NOT_VERIFIED",
+  "human_review": {
+    "performed": false,
+    "reviewer": null,
+    "reviewed_at": null,
+    "note": "Chưa có chuyên gia tuân thủ hoặc người bản ngữ độc lập rà soát. Không được coi là nhãn vàng đã được con người xác nhận."
+  },
+  "qrels_method": "Nhãn liên quan là cặp (tên tệp, đoạn bằng chứng NFC). Một chunk được coi là liên quan nếu đúng tên tệp và chứa nguyên văn đoạn bằng chứng. Chunk trùng nguồn được khử trùng lặp khi tính nDCG.",
+  "limitations": [
+    "Nhãn do AI soạn, chưa được con người rà soát (NOT_VERIFIED).",
+    "Corpus là tài liệu giả định, không phải chính sách thật của tổ chức nào.",
+    "Đo truy hồi, chưa đo faithfulness/citation support bằng LLM judge.",
+    "Kết quả với embedding giả lập chỉ xác nhận harness, không phản ánh chất lượng ngữ nghĩa của model thật.",
+    "Câu hỏi tiếng Việt chỉ phủ một miền GRC hẹp; không đại diện cho toàn bộ miền doanh nghiệp."
+  ]
+}
